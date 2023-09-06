@@ -3,24 +3,32 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var debug = require('debug')('ejemplodwpcll:server');
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+//Creando la innstancia de express
 var app = express();
 
-// view engine setup
+//Configurando el motor de plantillas
+//debug(`📣Ruta actual: ${path.join(__dirname, 'views')}`);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
+//se establecen los milddlewares
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+//Crear un server de archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//app.use('/users', usersRouter);
+app.
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
