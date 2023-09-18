@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('ejemplodwpcll:server');
 var http = require('http');
 
+
 /**
  * Get port from environment and store in Express.
  */
@@ -19,14 +20,14 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app); //(req, res) => {.....}
+var server = http.createServer(app);// (req, res)=>{...}
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
 server.listen(port);
-server.on('error', onError); //es una funcion callbacks
+server.on('error', onError); // callback
 server.on('listening', onListening);
 
 /**
@@ -86,5 +87,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('📣Listening on ' + bind);//tarea por que no funciona
+  debug('📢 Listening on ' + bind);
 }
