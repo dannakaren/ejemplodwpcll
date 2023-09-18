@@ -3,8 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "DEBUG=ejemplodwpcll:server node --watch ./bin/www.js"
+    "start": "PORT=3000 APP_URL='http://localhost' DEBUG=ejemplodwpcll:server node ./dist/bin/www",
+    "dev": "NODE_ENV=development PORT=3000 APP_URL='http://localhost' DEBUG=ejemplodwpcll:server babel-watch --watch ./server/views ./server/bin/www",
+    "devb": "babel-watch ./server/bin/www",
+    "devc": "NODE_ENV=development && webpack serve --config ./webpack.dev.config.js --mode development",
+    "build": "npm run clean && babel ./server --out-dir dist --copy-files",
+    "clean": "rm -rf ./dist"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -12,6 +16,14 @@
     "express": "~4.16.1",
     "hbs": "~4.0.4",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-middleware": "^6.1.1",
+    "webpack-dev-server": "^4.15.1",
+    "webpack-hot-middleware": "^2.25.4"
+  },
+  "devDependencies": {
+    "babel-loader": "^9.1.3"
   }
 }
