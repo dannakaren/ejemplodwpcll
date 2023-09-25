@@ -5,9 +5,8 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('ejemplodwpcll:server');
+var debug = require('debug')('dwpcii:server');
 var http = require('http');
-
 
 /**
  * Get port from environment and store in Express.
