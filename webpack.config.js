@@ -1,12 +1,13 @@
-// Importar el modulo Path
+// Importing a file routing manager
 const path = require('path');
+// Importing plugin
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-// Exportamos un Configuration Options Object
+// Exporting a Configuration Options Object
 module.exports = {
-  // 0. Estableciendo el modo produccion
+  // 0. Estableciendo el modo producción
   mode: 'production',
-  // 1. Estableciendo el archivo indexador
-  // del front-end
+  // 1. Estableciendo el archivo indexador del front-end
   entry: "./client/index.js",
   // 2. Estableciendo el archivo de salida
   output: {
@@ -15,7 +16,7 @@ module.exports = {
     // 2.2 Nombre del archivo de salida
     filename: "bundle.js",
   },
-  // Agregando un modulo a webpack
+  // Agregando un módulo a webpack
   module: {
     rules: [
       {
@@ -39,7 +40,18 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
       }
     ]
-  }
-}
+  },
+  // Sección de Plugins
+  plugins: [new MiniCssExtractPlugin({
+    // Archivo css de salida
+    filename: 'styles/app.css'
+  })]
+};
+
+                  
