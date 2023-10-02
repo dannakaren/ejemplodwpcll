@@ -30,7 +30,7 @@ const nodeEnviroment = process.env.NODE_ENV || 'production'
 // Deciding if we add webpack middleware or not
 if(nodeEnviroment === 'development'){
   // Start Webpack dev server
-  //console.log("🛠️  Ejecutando en modo desarrollo");
+  console.log("🛠️  Ejecutando en modo desarrollo");
   debug("🛠️  Ejecutando en modo desarrollo");
   // Adding the key "mode" with its value "development"
   webpackConfig.mode = nodeEnviroment;
