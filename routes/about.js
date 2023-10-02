@@ -23,14 +23,18 @@ const tecInfo = {
 
 router.get('/api/tec', function (req, res, next) {
 const imagenAleatoria = seleccionarImagenAlAzar(imagenes);
-res.send({tecInfo,image: imagenAleatoria});
+res.json({tecInfo,image: imagenAleatoria});
+});
+
+router.get('/api/danna', function (req, res, next) {
+res.json({name: "Danna Karen", surname: "Gutierrez"});
 });
 
 router.get('/tec', function (req, res, next) {
     
 const imagenAleatoria = seleccionarImagenAlAzar(imagenes);
 
-res.render('about', { ...tecInfo,image: imagenAleatoria});
+res.render('about', { ...tecInfo,image: imagenAleatoria}); //respuesta 
 });
 
 module.exports = router;
