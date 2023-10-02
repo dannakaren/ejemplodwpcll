@@ -5,7 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var debug = require('debug')('ejemplodwpcll:server');
-import debug from './services/debugLogger'
+//import debug from './services/debugLogger'
 
 
 var indexRouter = require('./routes/index');
