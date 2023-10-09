@@ -20,6 +20,7 @@
     "express": "~4.16.1",
     "hbs": "~4.0.4",
     "http-errors": "~1.6.3",
+    "materialize-css": "^1.0.0-rc.2",
     "morgan": "~1.9.1",
     "winston": "^3.11.0"
   },
