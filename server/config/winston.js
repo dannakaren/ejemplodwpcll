@@ -31,8 +31,10 @@ const myConsoleFormat = combine(
   timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
   // Función de impreson
   printf(
-    (info) =>
-      `${info.level}: ${info.label}: ${info.timestamp}: ${info.message}`,
+    (info) => `${info.level}: 
+${info.label}: 
+${info.timestamp}: 
+${info.message}`,
   ),
 );
 
