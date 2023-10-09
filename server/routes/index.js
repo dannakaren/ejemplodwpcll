@@ -1,9 +1,9 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
 
 /* GET Home page */
 router.get('/', function(){
-  res.render('index', { title: 'Express with babel' });
+res.render('index', { title: 'Express with babel' }):
 });
 
 module.exports = router;
