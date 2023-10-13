@@ -8,8 +8,10 @@ import logger from 'morgan';
 import webpack from 'webpack';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
-import webpackConfig from '../webpack.dev.config';
+// Importing template-engine
+import configTemplateEngine from './config/templateEngine';
 
+import webpackConfig from '../webpack.dev.config';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import debug from './services/debugLogger';
@@ -48,9 +50,9 @@ if (nodeEnviroment === 'development') {
 } else {
   console.log('🏭 Ejecutando en modo producción 🏭');
 }
-// Configurando el motor de plantillas
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+
+// Configuring the template engine
+configTemplateEngine(app);
 // Se establecen los middlewares
 app.use(logger('dev'));
 app.use(express.json());
