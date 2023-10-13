@@ -3,7 +3,7 @@ import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-import morgan from 'morgan';
+import logger from 'morgan';
 // Setting Webpack Modules
 import webpack from 'webpack';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
@@ -13,17 +13,12 @@ import webpackConfig from '../webpack.dev.config';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import debug from './services/debugLogger';
-// Impornting winston logger
-import log from './config/winston';
-// Importing webpack configuration
-// eslint-disable-next-line
-global["__rootdir"] = path.resolve(process.cwd());
+
 // Creando la instancia de express
 const app = express();
 
 // Get the execution mode
 const nodeEnviroment = process.env.NODE_ENV || 'production';
-
 // Deciding if we add webpack middleware or not
 if (nodeEnviroment === 'development') {
   // Start Webpack dev server
@@ -56,40 +51,32 @@ if (nodeEnviroment === 'development') {
 // Configurando el motor de plantillas
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
 // Se establecen los middlewares
-app.use(morgan('dev'));
-// Log all received requests
-app.use(morgan('dev', { stream: log.stream }));
+app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // Crea un server de archivos estaticos
 app.use(express.static(path.join(__dirname, '..', 'public')));
-
 // Registro de Middlewares de aplicación
 app.use('/', indexRouter);
 // Activa "usersRourter" cuando se
 // solicita "/users"
 app.use('/users', usersRouter);
-
+// app.use('/author', (req, res)=>{
+//   res.json({mainDeveloper: "Ivan Rivalcoba"})
+// });
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  log.info(`404 Pagina no encontrada ${req.method} ${req.originalUrl}`);
   next(createError(404));
 });
-
 // error handler
 app.use((err, req, res) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   // render the error page
   res.status(err.status || 500);
-  log.error(`${err.status || 500} - ${err.message}`);
   res.render('error');
 });
-//
-
 export default app;
