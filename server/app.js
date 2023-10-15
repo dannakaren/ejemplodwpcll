@@ -14,7 +14,6 @@ import configTemplateEngine from './config/templateEngine';
 import webpackConfig from '../webpack.dev.config';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
-import debug from './services/debugLogger';
 
 // Creando la instancia de express
 const app = express();
