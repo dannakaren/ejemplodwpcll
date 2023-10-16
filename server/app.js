@@ -1,5 +1,4 @@
 // Cargando dependencias
-import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
@@ -12,8 +11,8 @@ import WebpackHotMiddleware from 'webpack-hot-middleware';
 import configTemplateEngine from './config/templateEngine';
 
 import webpackConfig from '../webpack.dev.config';
-import indexRouter from './routes/index';
-import usersRouter from './routes/users';
+// Importando enrutador
+import router from './router';
 
 // Creando la instancia de express
 const app = express();
@@ -60,24 +59,10 @@ app.use(cookieParser());
 // Crea un server de archivos estaticos
 app.use(express.static(path.join(__dirname, '..', 'public')));
 // Registro de Middlewares de aplicación
-app.use('/', indexRouter);
 // Activa "usersRourter" cuando se
 // solicita "/users"
-app.use('/users', usersRouter);
 // app.use('/author', (req, res)=>{
-//   res.json({mainDeveloper: "Ivan Rivalcoba"})
+//   res.json({mainDeveloper: "Danna Gutierrez"})
 // });
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  next(createError(404));
-});
-// error handler
-app.use((err, req, res) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+router.addRoutes(app);
 export default app;
