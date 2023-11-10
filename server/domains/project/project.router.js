@@ -14,5 +14,8 @@ router.get(['/projects'], projectController.projects);
 // GET '/user/logout'
 router.get(['/add'], projectController.add);
 
+// POST "/project/add"
+router.post('/add', projectController.addPost);
+
 // Exporto este tramo de ruta
 export default router;
