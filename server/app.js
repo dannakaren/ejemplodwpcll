@@ -1,35 +1,29 @@
-// Helps to handle http errors
-import createError from 'http-errors';
-// Import the Express Library
+// Cargando dependencias
 import express from 'express';
-// Is a Core-Node library to manage system paths
 import path from 'path';
-// Helps to parse client cookies
 import cookieParser from 'cookie-parser';
-// Library to log http communication
 import morgan from 'morgan';
-
-// Importing template-engine
-import configTemplateEngine from '@server/config/templateEngine';
-
+import mongoose from 'mongoose';
 // Setting Webpack Modules
 import webpack from 'webpack';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
+
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
+
+// Importing template-engine
+import configTemplateEngine from './config/templateEngine';
 
 // Impornting winston logger
 import log from './config/winston';
 
 // Importando enrutador
 import router from './router';
-
 // Creando variable del directorio raiz
 // eslint-disable-next-line
-global['__rootdir'] = path.resolve(process.cwd());
-
-// We are creating the express instance
+global["__rootdir"] = path.resolve(process.cwd());
+// Creando la instancia de express
 const app = express();
 
 // Get the execution mode
@@ -38,10 +32,10 @@ const nodeEnviroment = process.env.NODE_ENV || 'production';
 // Deciding if we add webpack middleware or not
 if (nodeEnviroment === 'development') {
   // Start Webpack dev server
-  console.log('🛠️  Ejecutando en modo desarrollo');
+  console.log('🛠️ Ejecutando en modo desarrollo 🛠️');
   // Adding the key "mode" with its value "development"
   webpackConfig.mode = nodeEnviroment;
-  // Setting the port
+  // Setting the dev server port to the same value as the express server
   webpackConfig.devServer.port = process.env.PORT;
   // Setting up the HMR (Hot Module Replacement)
   webpackConfig.entry = [
@@ -65,40 +59,37 @@ if (nodeEnviroment === 'development') {
   console.log('🏭 Ejecutando en modo producción 🏭');
 }
 
+// Database connecting checker Middleware
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState === 1) {
+    log.info('✔Verificacion de conexion a db exitosa');
+    next();
+  } else {
+    log.info('❌No pasa la verificacion de conexion a la DB');
+    res.status(503).render('errors/e503View', { layout: 'errors' });
+  }
+});
+
 // Configuring the template engine
 configTemplateEngine(app);
 
-// Registering middlewares
-// Log all received requests
+// Se establecen los middlewares
 app.use(morgan('dev', { stream: log.stream }));
-// Parse request data into json
 app.use(express.json());
-// Decode url info
 app.use(express.urlencoded({ extended: false }));
-// Parse client cookies into json
 app.use(cookieParser());
-// Set up the static file server
-app.use(express.static(path.join(__dirname, '../public')));
+
+// Crea un server de archivos estaticos
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Registering routes
 router.addRoutes(app);
 
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  log.info(`404 Pagina no encontrada ${req.method} ${req.originalUrl}`);
-  next(createError(404));
-});
+// Activa "usersRourter" cuando se
+// solicita "/users"
 
-// error handler
-app.use((err, req, res) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  log.error(`${err.status || 500} - ${err.message}`);
-  res.render('error');
-});
+// app.use('/author', (req, res)=>{
+//   res.json({mainDeveloper: "Ivan Rivalcoba"})
+// });
 
 export default app;
