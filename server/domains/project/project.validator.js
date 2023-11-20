@@ -1,21 +1,27 @@
+// Importando biblioteca de validacion
 import * as Yup from 'yup';
-// Crear un esquema de validacion
+
+// Creando un esquema de validación para el proyecto
 const projectSchema = Yup.object().shape({
-    name: Yup.string().required('Se requiere un nombre de proyecto'),
-    description: Yup.string()
-    .max( 500,'La descripcion no debe tener mas de 500 caracteres' )
-    .required('Se requiere una descripcion del proyecto'),
+  name: Yup.string().required('Se requiere un nombre de proyecto'),
+  description: Yup.string()
+    .max(500, 'No escribir mas de 500 caracteres')
+    .required('Se requiere una descripción del proyecto'),
 });
-// Middleware de extraccion
-cosnt getProject =(req, res) => {
-    //extrayendo datos de la peticion
-    const {name, description } = req.body;
-    return {
-        name,
-        description,
-    };
+
+// Middleware de extracción
+// Creando el extractor de datos de la petición
+const getProject = (req) => {
+  // Extrayendo datos de la petición
+  const { name, description } = req.body;
+  // Regresando el objeto proyecto
+  return {
+    name,
+    description,
+  };
 };
-export default{
-    projectSchema,
-    getProject,
-}
+
+export default {
+  projectSchema,
+  getProject,
+};

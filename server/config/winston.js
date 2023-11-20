@@ -1,18 +1,15 @@
 // Importando el core de winston
-// y la función format de winston>
-// eslint-disable-next-line import/no-extraneous-dependencies
+// y la función format de winston
 import winston, { format } from 'winston';
 import path from 'path';
 
 // Se desestructuran funciones para realizar la
 // composición del formato
-// eslint-disable-next-line object-curly-newline
-const { combine, timestamp, label, printf, colorize, prettyPrint } = format;
+const { combine, timestamp, label, printf, colorize } = format;
 
 // Creando variable del directorio raiz
 // eslint-disable-next-line
 global['__rootdir'] = path.resolve(process.cwd());
-
 // Se define un esquema de colores
 // segun el grado de severidad
 const colors = {
@@ -22,12 +19,9 @@ const colors = {
   http: 'magenta',
   debug: 'blue',
 };
-
 // Agregando el esquema de colores a Winston
 winston.addColors(colors);
-
 // ==== Se crean las plantillas para los formatos ====
-
 // Formato para la consola
 const myConsoleFormat = combine(
   // Agregando colores la formato
@@ -39,11 +33,9 @@ const myConsoleFormat = combine(
   // Función de impreson
   printf(
     (info) =>
-      // eslint-disable-next-line implicit-arrow-linebreak
       `${info.level}: ${info.label}: ${info.timestamp}: ${info.message}`,
   ),
 );
-
 // Formato para los archivos
 const myFileFormat = combine(
   // Quitando todo tipo de colorizacion
@@ -51,7 +43,7 @@ const myFileFormat = combine(
   // Agregando fecha
   timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
   // Estableciendo la salida en formato Json
-  prettyPrint(),
+  format.json(),
 );
 
 // Creando el objeto de opciones para cada transporte
@@ -86,7 +78,6 @@ const options = {
     format: myConsoleFormat,
   },
 };
-
 // Se crea instancia de logger
 const logger = winston.createLogger({
   transports: [
@@ -105,6 +96,5 @@ logger.stream = {
     logger.info(message);
   },
 };
-
 // Por ultimo exportamos el logger
 export default logger;
