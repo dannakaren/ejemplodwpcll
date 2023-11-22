@@ -1,35 +1,40 @@
 // Importing winston logger
 import log from '../../config/winston';
 
+// Importando el modelo
+import ProjectModel from './project.model';
+
+// Importando Httperrors
+
 // Actions methods
 // GET "/project"
 const showDashboard = (req, res) => {
-  res.send('⚠️ UNDER CONSTRUCTION: GET /project ⚠️');
-};
-
-// GET "/project/add"
 const add = (req, res) => {
-  res.render('project/addView');
 };
 
 // POST "/project/add"
-const addPost = (req, res) => {
+const addPost = async (req, res) => {
   // Rescatando la info del formulario
   const { errorData: validationError } = req;
   // En caso de haber error
-  // se le informa al cliente
-  if (validationError) {
-    log.info('Se entrega al cliente error de validación de add Project');
-    res.status(422).json(validationError);
-  } else {
-    // En caso de que pase la validación
-    // Se desestructura la información
-    // de la peticion
-    const { validData: project } = req;
-    // Se contesta la información
-    // del proyecto al cliente
+const addPost = (req, res) => {
+  // Se desestructura la información
+  // de la peticion
+  const { validData: project } = req;
+  // Creando la instancia de un documento
+  // con los valores de 'project'
+  const projectDocument = new ProjectModel(project);
+  try {
+    // Creando la instancia de un documento con los valores de 'project'
+    const savedProject = await ProjectModel.create(project);
+    // Se contesta la información del proyecto al cliente
     log.info('Se entrega al cliente información del proyecto cargado');
-    res.status(200).json(project);
+    return res.status(200).json(savedProject);
+  } catch (error) {
+    log.error(
+      'ln 53 project.controller: Error al guardar proyecto en la base de datos',
+    );
+    return res.status(500).json(error);
   }
 };
 
