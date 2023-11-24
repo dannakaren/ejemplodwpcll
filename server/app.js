@@ -4,35 +4,33 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+// Enable post and delete verbs
+import methodOverride from 'method-override';
+
 // Setting Webpack Modules
 import webpack from 'webpack';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
-
-// Importing webpack configuration
-import webpackConfig from '../webpack.dev.config';
-
 // Importing template-engine
 import configTemplateEngine from './config/templateEngine';
-
+// Importing webpack configuration
+import webpackConfig from '../webpack.dev.config';
 // Impornting winston logger
 import log from './config/winston';
-
-// Importando enrutador
+// Importing Router
 import router from './router';
+import debug from './services/debugLogger';
 // Creando variable del directorio raiz
 // eslint-disable-next-line
-global["__rootdir"] = path.resolve(process.cwd());
+global['__rootdir'] = path.resolve(process.cwd());
 // Creando la instancia de express
 const app = express();
-
 // Get the execution mode
 const nodeEnviroment = process.env.NODE_ENV || 'production';
-
 // Deciding if we add webpack middleware or not
 if (nodeEnviroment === 'development') {
   // Start Webpack dev server
-  console.log('🛠️ Ejecutando en modo desarrollo 🛠️');
+  debug('🛠️ Ejecutando en modo desarrollo 🛠️');
   // Adding the key "mode" with its value "development"
   webpackConfig.mode = nodeEnviroment;
   // Setting the dev server port to the same value as the express server
@@ -58,38 +56,28 @@ if (nodeEnviroment === 'development') {
 } else {
   console.log('🏭 Ejecutando en modo producción 🏭');
 }
-
-// Database connecting checker Middleware
+// Configuring the template engine
+configTemplateEngine(app);
+// Database connection Checker Middleware
 app.use((req, res, next) => {
   if (mongoose.connection.readyState === 1) {
-    log.info('✔Verificacion de conexion a db exitosa');
+    log.info('✅ Verificación de conexión a db existosa.');
     next();
   } else {
-    log.info('❌No pasa la verificacion de conexion a la DB');
+    log.info('🔴 No pasa la verificacion de conexión a la BD');
     res.status(503).render('errors/e503View', { layout: 'errors' });
   }
 });
-
-// Configuring the template engine
-configTemplateEngine(app);
-
 // Se establecen los middlewares
 app.use(morgan('dev', { stream: log.stream }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
+// Enable post and delete verbs
+app.use(methodOverride('_method'));
 // Crea un server de archivos estaticos
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// Registering routes
+// Registro de Rutas
 router.addRoutes(app);
-
-// Activa "usersRourter" cuando se
-// solicita "/users"
-
-// app.use('/author', (req, res)=>{
-//   res.json({mainDeveloper: "Ivan Rivalcoba"})
-// });
-
 export default app;
