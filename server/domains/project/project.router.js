@@ -31,6 +31,15 @@ router.post(
   }),
   projectController.addPost,
 );
+// PUT "/project/edit/:id"
+router.put(
+  '/edit/:id',
+  ValidateFactory({
+    schema: projectValidator.projectSchema,
+    getObject: projectValidator.getProject,
+  }),
+  projectController.editPut,
+);
 
 // Exporto este tramo de ruta
 export default router;
