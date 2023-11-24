@@ -1,18 +1,21 @@
 import log from '../../config/winston';
-
 // Importando el modelo
 import ProjectModel from './project.model';
-
-// Actions methods
-// GET "/project"
-const showDashboard = (req, res) => {
-  res.send('⚠️ UNDER CONSTRUCTION: GET /project ⚠️');
-};
-// GET "/project/add"
+// Action Methods
+// GET '/project/addForm'
+// GET '/project/add'
 const add = (req, res) => {
   res.render('project/addView');
 };
-
+// GET '/project/showDashboard'
+// GET '/project/projects'
+// GET '/project'
+const showDashboard = async (req, res) => {
+  // Consultado todos los proyectos
+  const projects = await ProjectModel.find({}).lean().exec();
+  // Se entrega la vista dashboardView con el viewmodel projects
+  res.render('project/dashboardView', { projects });
+};
 // POST "/project/add"
 const addPost = async (req, res) => {
   // Rescatando la info del formulario
@@ -22,6 +25,7 @@ const addPost = async (req, res) => {
   if (validationError) {
     log.info('Se entrega al cliente error de validación de add Project');
     // Se desestructuran los datos de validación
+    // y se renombran de  "value" a "project"
     const { value: project } = validationError;
     // Se extraen los campos que fallaron en la validación
     const errorModel = validationError.inner.reduce((prev, curr) => {
@@ -40,9 +44,12 @@ const addPost = async (req, res) => {
   try {
     // Creando la instancia de un documento con los valores de 'project'
     const savedProject = await ProjectModel.create(project);
-    // Se contesta la información del proyecto al cliente
-    log.info('Se entrega al cliente información del proyecto cargado');
-    return res.status(200).json(savedProject);
+    // Se informa al cliente que se guardo el proyecto
+    log.info(`Se carga proyecto ${savedProject}`);
+    // Se registra en el log el redireccionamiento
+    log.info('Se redirecciona el sistema a /project');
+    // Se redirecciona el sistema a la ruta '/project'
+    return res.redirect('/project/showDashboard');
   } catch (error) {
     log.error(
       'ln 53 project.controller: Error al guardar proyecto en la base de datos',
@@ -51,10 +58,17 @@ const addPost = async (req, res) => {
   }
 };
 
-// Controlador user
+// GET "/project/edit/:id"
+const edit = (req, res) => {
+  // Se extrae el id de los parámetros
+  const { id } = req.params;
+  // Se renderiza la vista de edición pasando el viewmodel "id"
+  res.render('project/editView', { id });
+};
+
 export default {
-  // Action Methods
-  showDashboard,
   add,
+  showDashboard,
   addPost,
+  edit,
 };
