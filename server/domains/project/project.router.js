@@ -2,26 +2,18 @@
 import { Router } from 'express';
 // Importando el controlador
 import projectController from './project.controller';
-
 // Importando factory de validación
 import ValidateFactory from '../../services/validateFactory';
 // Importando el validador de proyectos
 import projectValidator from './project.validator';
-
 // Creando una isntancia del enrutador
 const router = new Router();
-
 // Enrutamos
 // GET "/project"
 router.get('/', projectController.showDashboard);
 router.get('/showDashboard', projectController.showDashboard);
-// GET "/project/edit/:id"
-router.get('/edit/:id', projectController.edit);
 // GET "/project/add"
 router.get('/add', projectController.add);
-// PUT "/project/edit/:id"
-router.put('/edit/:id', projectController.editPut);
-
 // POST "/project/add"
 router.post(
   '/add',
@@ -33,7 +25,6 @@ router.post(
 );
 // GET "/project/edit/:id"
 router.get('/edit/:id', projectController.edit);
-
 // PUT "/project/edit/:id"
 router.put(
   '/edit/:id',
