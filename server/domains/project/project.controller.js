@@ -80,7 +80,6 @@ const edit = async (req, res) => {
   }
 };
 
-// PUT "/project/edit/:id"
 const editPut = async (req, res) => {
   const { id } = req.params;
   // Rescatando la info del formulario
