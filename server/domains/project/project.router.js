@@ -9,22 +9,15 @@ import projectValidator from './project.validator';
 // Creando una isntancia del enrutador
 const router = new Router();
 // Enrutamos
-// GET "/project"
-router.get('/', projectController.showDashboard);
-router.get('/showDashboard', projectController.showDashboard);
-// GET "/project/add"
-router.get('/add', projectController.add);
-// POST "/project/add"
-router.post(
-  '/add',
-  ValidateFactory({
-    schema: projectValidator.projectSchema,
-    getObject: projectValidator.getProject,
-  }),
-  projectController.addPost,
-);
+// GET '/project/addForm'
+// GET '/project/add'
+// GET '/project'
+router.get(['/', '/addForm', '/add'], projectController.addForm);
 // GET "/project/edit/:id"
 router.get('/edit/:id', projectController.edit);
+// GET '/project/showDashboard'
+// GET '/project/projects'
+router.get(['/showDashboard', '/projects'], projectController.showDashboard);
 // PUT "/project/edit/:id"
 router.put(
   '/edit/:id',
@@ -33,6 +26,15 @@ router.put(
     getObject: projectValidator.getProject,
   }),
   projectController.editPut,
+);
+// POST "/project/add"
+router.post(
+  '/add',
+  ValidateFactory({
+    schema: projectValidator.projectSchema,
+    getObject: projectValidator.getProject,
+  }),
+  projectController.addPost,
 );
 // DELETE "/project/:id"
 router.delete('/:id', projectController.deleteProject);
