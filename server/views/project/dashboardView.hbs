@@ -1,4 +1,4 @@
-<h1>Listado de Proyectos</h1>
+<h1>Listado de proyectos</h1>
 <div class="row">
   {{#each projects}}
     <div class="col s12">
@@ -13,7 +13,7 @@
               style = "display: inline-flex; vertical-align: sub;">edit</i>
             <span >Editar Proyecto</span>
           </a>
-          <a href="#" class="inline">
+          <a href="javascript: deleteProject('{{_id}}')" class="inline">
             <i class="material-icons" 
 	            style = "display: inline-flex; vertical-align: sub;">
 	            delete</i>

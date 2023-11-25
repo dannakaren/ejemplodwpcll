@@ -6,9 +6,15 @@ import './styles/style.css';
 import 'materialize-css/dist/css/materialize.css';
 // Importando scripts de Materialize
 import 'materialize-css/dist/js/materialize';
+// Script para borrar proyecto
+import deleteProject from './domains/project.dashboard';
 /* eslint-enable */
 
 // Inicializando Scripts de Materialize para interactividad
 M.AutoInit();
+// Cargando script en caso de que la URL sea '/project/dashboard'
+if (window.location.pathname === '/project/showDashboard') {
+  window.deleteProject = deleteProject;
+}
 
 console.log('Webpack Working Middleware!!! 📦');
