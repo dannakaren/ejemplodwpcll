@@ -1,28 +1,31 @@
 // Cargando dependencias
 import express from 'express';
+// Enable post and delete verbs
+// eslint-disable-next-line import/no-extraneous-dependencies
+import methodOverride from 'method-override';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
-// Enable post and delete verbs
-import methodOverride from 'method-override';
-
 // Setting Webpack Modules
 import webpack from 'webpack';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
-// Importing template-engine
 import configTemplateEngine from './config/templateEngine';
+
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
+// Importando configurador de sesiones
+import configSession from './config/configSessions';
 // Impornting winston logger
 import log from './config/winston';
-// Importing Router
+
+// Importando enrutador
 import router from './router';
 import debug from './services/debugLogger';
 // Creando variable del directorio raiz
 // eslint-disable-next-line
-global['__rootdir'] = path.resolve(process.cwd());
+global["__rootdir"] = path.resolve(process.cwd());
 // Creando la instancia de express
 const app = express();
 // Get the execution mode
@@ -56,15 +59,14 @@ if (nodeEnviroment === 'development') {
 } else {
   console.log('🏭 Ejecutando en modo producción 🏭');
 }
-// Configuring the template engine
+// Configurando el motor de plantillas
 configTemplateEngine(app);
-// Database connection Checker Middleware
 app.use((req, res, next) => {
   if (mongoose.connection.readyState === 1) {
-    log.info('✅ Verificación de conexión a db existosa.');
+    log.info('✔Verificacion de conexion a db exitosa');
     next();
   } else {
-    log.info('🔴 No pasa la verificacion de conexión a la BD');
+    log.info('❌No pasa la verificacion de conexion a la DB');
     res.status(503).render('errors/e503View', { layout: 'errors' });
   }
 });
@@ -75,9 +77,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // Enable post and delete verbs
 app.use(methodOverride('_method'));
+// Habilitando manejo de sesiones y mensajes flash
+configSession(app);
 // Crea un server de archivos estaticos
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// Registro de Rutas
+// Activa "usersRourter" cuando se
+// solicita "/users"
+// app.use('/author', (req, res)=>{
+//   res.json({mainDeveloper: "Ivan Rivalcoba"})
+// });
 router.addRoutes(app);
 export default app;
