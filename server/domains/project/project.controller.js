@@ -118,6 +118,8 @@ const editPut = async (req, res) => {
     // Se salvan los cambios
     log.info(`Actualizando proyecto con id: ${id}`);
     await project.save();
+    // Generando mensaje FLASH
+    req.flash('successMessage', 'Proyecto editado con exito');
     return res.redirect(`/project/edit/${id}`);
   } catch (error) {
     log.error(`Error al actualizar proyecto con id: ${id}`);
@@ -132,6 +134,8 @@ const deleteProject = async (req, res) => {
   // Usando el modelo para borrar el proyecto
   try {
     const result = await ProjectModel.findByIdAndRemove(id);
+    // Generando mensaje FLASH
+    req.flash('successMessage', 'Proyecto editado con exito');
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(error);
