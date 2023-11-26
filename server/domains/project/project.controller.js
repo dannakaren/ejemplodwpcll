@@ -1,45 +1,26 @@
 import log from '../../config/winston';
+
 // Importando el modelo
 import ProjectModel from './project.model';
+
 // Action Methods
+
 // GET '/project/addForm'
 // GET '/project/add'
 const addForm = (req, res) => {
   res.render('project/addView');
 };
+
 // GET '/project/showDashboard'
 // GET '/project/projects'
 // GET '/project'
 const showDashboard = async (req, res) => {
   // Consultado todos los proyectos
   const projects = await ProjectModel.find({}).lean().exec();
-  // Enviando los proyectos al cliente en JSON
-  log.info('Se entrega dashboard de proyectos');
+  // Se entrega la vista dashboardView con el viewmodel projects
   res.render('project/dashboardView', { projects });
 };
-// GET "/project/edit/:id"
-const edit = async (req, res) => {
-  // Se extrae el id de los parámetros
-  const { id } = req.params;
-  // Buscando en la base de datos
-  try {
-    log.info(`Se inicia la busqueda del proyecto con el id: ${id}`);
-    const project = await ProjectModel.findOne({ _id: id }).lean().exec();
-    if (project === null) {
-      log.info(`No se encontro el proyecto con el id: ${id}`);
-      return res
-        .status(404)
-        .json({ fail: `No se encontro el proyecto con el id: ${id}` });
-    }
-    // Se manda a renderizar la vista de edición
-    // res.render('project/editView', project);
-    log.info(`Proyecto encontrado con el id: ${id}`);
-    return res.render('project/editView', { project });
-  } catch (error) {
-    log.error('Ocurre un error en: metodo "error" de project.controller');
-    return res.status(500).json(error);
-  }
-};
+
 // POST "/project/add"
 const addPost = async (req, res) => {
   // Rescatando la info del formulario
@@ -72,6 +53,8 @@ const addPost = async (req, res) => {
     log.info(`Se carga proyecto ${savedProject}`);
     // Se registra en el log el redireccionamiento
     log.info('Se redirecciona el sistema a /project');
+    // Agregando mensaje de flash
+    req.flash('successMessage', 'Proyecto agregado con exito');
     // Se redirecciona el sistema a la ruta '/project'
     return res.redirect('/project/showDashboard');
   } catch (error) {
@@ -81,6 +64,30 @@ const addPost = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
+// GET "/project/edit/:id"
+const edit = async (req, res) => {
+  // Se extrae el id de los parámetros
+  const { id } = req.params;
+  // Buscando en la base de datos
+  try {
+    log.info(`Se inicia la busqueda del proyecto con el id: ${id}`);
+    // Se busca el proyecto en la base de datos
+    const project = await ProjectModel.findOne({ _id: id }).lean().exec();
+    if (project === null) {
+      log.info(`No se encontro el proyecto con el id: ${id}`);
+      return res
+        .status(404)
+        .json({ fail: `No se encontro el proyecto con el id: ${id}` });
+    }
+    log.info(`Proyecto encontrado con el id: ${id}`);
+    return res.render('project/editView', { project });
+  } catch (error) {
+    log.error('Ocurre un error en: metodo "error" de project.controller');
+    return res.status(500).json(error);
+  }
+};
+
 // PUT "/project/edit/:id"
 const editPut = async (req, res) => {
   const { id } = req.params;
@@ -129,13 +136,12 @@ const editPut = async (req, res) => {
 
 // DELETE "/project/:id"
 const deleteProject = async (req, res) => {
-  // Extrayendo el id de los parametros
   const { id } = req.params;
   // Usando el modelo para borrar el proyecto
   try {
     const result = await ProjectModel.findByIdAndRemove(id);
-    // Generando mensaje FLASH
-    req.flash('successMessage', 'Proyecto editado con exito');
+    // Agregando mensaje de flash
+    req.flash('successMessage', 'Proyecto borrado con exito');
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(error);
