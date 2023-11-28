@@ -11,12 +11,12 @@ import mongoose from 'mongoose';
 import webpack from 'webpack';
 import WebpackDevMiddleware from 'webpack-dev-middleware';
 import WebpackHotMiddleware from 'webpack-hot-middleware';
-import configTemplateEngine from './config/templateEngine';
 
+import configTemplateEngine from './config/templateEngine';
+import configSessions from './config/configSessions';
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
 // Importando configurador de sesiones
-import configSession from './config/configSessions';
 // Impornting winston logger
 import log from './config/winston';
 
@@ -78,7 +78,7 @@ app.use(cookieParser());
 // Enable post and delete verbs
 app.use(methodOverride('_method'));
 // Habilitando manejo de sesiones y mensajes flash
-configSession(app);
+configSessions(app);
 // Habilitando manejo de sesiones y mensajes flash
 // Crea un server de archivos estaticos
 app.use(express.static(path.join(__dirname, '..', 'public')));
