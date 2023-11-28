@@ -18,6 +18,15 @@ const register = (req, res) => {
   log.info('Se entrega formulario de registro');
   res.render('user/register');
 };
+// POST '/user/register'
+const registerPost = (req, res) => {
+  const { validData, errorData } = req;
+  log.info('Se procesa formulario de registro');
+  res.json({
+    validData,
+    errorData,
+  });
+};
 
 // Controlador user
 export default {
@@ -25,4 +34,5 @@ export default {
   login,
   logout,
   register,
+  registerPost,
 };
